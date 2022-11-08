@@ -18,7 +18,9 @@ app.get('/',async (req,res) => {
 })
 
 app.post('/', async (req,res) => {
+    console.log("INSIDE POST HANDLER")
     try {
+        console.log(req.body)
         res.sendStatus(204)
     } catch(e) {
         res.status(400).json(JSON.stringify({no:"nononono"}))
