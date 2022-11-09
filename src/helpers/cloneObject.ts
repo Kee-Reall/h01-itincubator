@@ -1,0 +1,1 @@
+export const cloneObject = (obj: Object) => JSON.parse(JSON.stringify(obj))

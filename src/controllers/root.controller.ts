@@ -5,7 +5,7 @@ class RootController {
 
     constructor() {}
 
-    async getAll(req: CustomRequest.GetAllVideoRequest):Promise<void> {
+    async getAll(req: CustomRequest.GetAllVideoRequest, res: Response):Promise<void> {
 
     }
 
