@@ -27,16 +27,22 @@ export class Store {
         }
         const validCall = this.checkValidPush(element)
         if(validCall){
+            const currentDate = new Date(Date.now());
+            const nextDate = new Date(Date.now())
+            nextDate.setDate(nextDate.getDate() + 1)
             const toPush:storeVideo = {
                 ...element,
                 id,
-
+                canBeDownloaded: false,
+                minAgeRestriction: null,
+                createdAt: currentDate.toISOString(),
+                publicationDate: nextDate.toISOString()
             }
             this.state.push(toPush)
             return this.state
         }else{
             return {
-                message:"",
+                message:"There is some error inside. Check field to see witch field has error",
                 field:validCall
             }
         }

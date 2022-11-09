@@ -15,9 +15,9 @@ export interface CreateVideoModel extends Object{
 export interface UpdateVideoModel extends CreateVideoModel {
     id: number
     canBeDownloaded: boolean
-    minAgeRestriction?: IntRange<1, 18>
-    createdAt: Date
-    publicationDate: Date
+    minAgeRestriction: IntRange<1, 18> | null
+    createdAt: string
+    publicationDate: string
 }
 
 export interface StoreVideoModel extends UpdateVideoModel {
