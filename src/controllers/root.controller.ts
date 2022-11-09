@@ -1,12 +1,10 @@
 import {Request, Response} from "express";
 import {rootRouter} from "../routes/root.route";
+import {IDgenerator} from "../helpers/IDgenerator";
 
 class RootController {
 
-    constructor(
-
-    ) {
-    }
+    constructor() {}
 
     async getAll():Promise<void> {
 
@@ -26,6 +24,13 @@ class RootController {
 
     async deleteVideo (req: Request, res: Response){
 
+    }
+    *getId() {
+       let i:number = -1
+       while(true) {
+        i++
+        yield i
+       } 
     }
 }
 

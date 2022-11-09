@@ -1,9 +1,9 @@
-import bodyParser from "body-parser"
+//import bodyParser from "body-parser"
 import  express  from "express"
 
 const app = express()
-const bp = express.json()
-app.use(bp)
+const bodyParser = express.json()
+app.use(bodyParser)
 
 const db: any = [
     {name:"Evlampy", age: 26},
