@@ -1,28 +1,27 @@
-import {Request, Response} from "express";
-import {rootRouter} from "../routes/root.route";
-import {IDgenerator} from "../helpers/IDgenerator";
+import { Response } from "express";
+import * as CustomRequest from "../models/request.model"
 
 class RootController {
 
     constructor() {}
 
-    async getAll():Promise<void> {
+    async getAll(req: CustomRequest.GetAllVideoRequest):Promise<void> {
 
     }
 
-    async getById(req: Request, res: Response) {
+    async getOneById(req: CustomRequest.GetOneVideoRequest, res: Response) {
 
     }
 
-    async createVideo(req: Request, res: Response) {
+    async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
 
     }
 
-    async updateVideo (req: Request, res: Response){
+    async updateVideo (req: CustomRequest.UpdateVideoRequest, res: Response){
 
     }
 
-    async deleteVideo (req: Request, res: Response){
+    async deleteVideo (req: CustomRequest.DeleteVideoRequest, res: Response){
 
     }
     *getId() {

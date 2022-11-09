@@ -1,5 +1,9 @@
 import {Request} from 'express'
-import {iCreateVideoModel, iUpdateVideoModel} from './video.model'
+import {CreateVideoModel, UpdateVideoModel} from './video.model'
+
+export interface GetAllVideoRequest extends Request {
+    
+}
 
 export interface GetOneVideoRequest extends Request {
     query: {
@@ -14,13 +18,13 @@ export interface DeleteVideoRequest extends Request {
 }
 
 export interface CreateVideoRequest extends Request {
-    body: iCreateVideoModel
+    body: CreateVideoModel
 }
 
 export interface UpdateVideoRequest extends Request {
     query: {
         id: string
     }
-    body: iUpdateVideoModel
+    body: UpdateVideoModel
 }
 

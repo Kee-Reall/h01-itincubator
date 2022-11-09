@@ -1,4 +1,3 @@
-//import bodyParser from "body-parser"
 import  express  from "express"
 
 const app = express()
@@ -10,7 +9,6 @@ const db: any = [
     {name:"Jane", age:324}
 ]
 
-//app.use(bodyParser)
 
 app.get('/',async (req,res) => {
     console.info("HEllo from get")

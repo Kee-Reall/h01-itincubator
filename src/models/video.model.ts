@@ -5,34 +5,24 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
     : Enumerate<N, [...Acc, Acc['length']]>
 type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
 //
-interface errorMessage {
-    message: string
-    field: string
-}
 
-export interface iCreateVideoModel {
+export interface CreateVideoModel {
     tittle: string // how to limit strings length?
     author: string // to limit tha too
     availableResolutions?: Array<keyof availableResolutions>
 }
 
-export interface iUpdateVideoModel extends iCreateVideoModel {
+export interface UpdateVideoModel extends CreateVideoModel {
+    id: number
     canBeDownloaded: boolean
     minAgeRestriction?: IntRange<1, 18>
     createdAt: Date
     publicationDate: Date
 }
 
-export interface iStoreVideoModel extends iUpdateVideoModel {
-    id: number
+export interface StoreVideoModel extends UpdateVideoModel {
+    
 }
-
-
-
-export interface APIErrorResult {
-    errorsMessages: Array<errorMessage>
-}
-
 //i need to limit strings there is 3 way
 // 1 make correct genericType
 // 2 make class validator

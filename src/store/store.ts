@@ -1,17 +1,20 @@
-type ChangeMe = any[]
-type inputNew = any
-type storeModel = any
-type inputUpdate = any
-
+import * as videoModels from '../models/video.model'
+type storeVideo = videoModels.StoreVideoModel
+type createVideo = videoModels.CreateVideoModel
+type updateVideo = videoModels.UpdateVideoModel
+type storeVideos = Array<storeVideo>
 export class Store {
-    constructor(public state: ChangeMe){}
+    state: storeVideos
+    constructor(public initialState: storeVideos){
+        this.state = {...initialState}
+    }
 
-    push(element: inputNew) {
-        const toPush: storeModel = {}
+    push(element: createVideo) {
+        const toPush: storeVideo ///i know i need to code that later
         this.state.push(toPush)
     }
 
-    update(element: inputUpdate) {
+    update(element: updateVideo) {
         this.state = this.state.map(el => {
             if (el.id === element.id) {
                 const obj: any = {}
