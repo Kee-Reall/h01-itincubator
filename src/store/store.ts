@@ -1,12 +1,12 @@
-import * as videoModels from '../models/video.model'
+import * as videoModels from '../models/video.model';
 import {cloneObject} from "../helpers/cloneObject";
 import {availableResolutions} from "../models/video.model";
 import {errorMessage} from "../models/errorMessage.model";
 
-type storeVideo  = videoModels.StoreVideoModel
-type createVideo = videoModels.CreateVideoModel
-type updateVideo = videoModels.UpdateVideoModel
-type storeVideos = Array<storeVideo>
+type storeVideo  = videoModels.StoreVideoModel;
+type createVideo = videoModels.CreateVideoModel;
+type updateVideo = videoModels.UpdateVideoModel;
+type storeVideos = Array<storeVideo>;
 
 export class Store {
     state: storeVideos
