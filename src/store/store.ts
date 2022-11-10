@@ -10,10 +10,12 @@ type storeVideos = Array<storeVideo>
 
 export class Store {
     state: storeVideos
+    private _id: number
     constructor(
-        public initialState: storeVideos
+        public initialState: storeVideos        
     ) {
         this.state = cloneObject(this.initialState)
+        this._id = -1
     }
 
     setInitialState(): storeVideos {
@@ -21,12 +23,18 @@ export class Store {
         return this.state
     }
 
-    push(element: createVideo,id:number): storeVideos| errorMessage {
+    genereateId() {
+        this._id += 1
+        return this._id
+    }
+
+    push(element: createVideo): storeVideos| errorMessage {
+        const id = this.genereateId()
         if(!element.hasOwnProperty("availableResolutions")){
             element.availableResolutions = null
         }
         const validCall = this.checkValidPush(element)
-        if(validCall){
+        if(validCall) {
             const currentDate = new Date(Date.now());
             const nextDate = new Date(Date.now())
             nextDate.setDate(nextDate.getDate() + 1)
@@ -48,21 +56,28 @@ export class Store {
         }
     }
 
-    update(element: updateVideo) {
+    update(element: updateVideo,id: number): storeVideo | undefined {
         try {
             this.state = this.state.map( (el: storeVideo) => {
-                if (el.id === element.id) {
-                    const obj: any = {} //вот в этот объект положи новое
+                if (el.id === id) {
+                    const obj = {...element,id} //вот в этот объект положи новое
                     return obj
-                } else return el
+                } else {
+                    return el
+                }
             })
-            return this.state
+            return this.find(id)
         } catch (e) {
             console.log('something go wrong\nstate has no change')
+            return undefined
         }
     }
 
-    checkValidPush(element: createVideo): true | any[] {
+    find(id: number): storeVideo | undefined {
+        return this.state.find(el => el.id === id)
+    }
+
+    checkValidPush(element: createVideo): true | Array<keyof createVideo> {
         const [maxAuthorLength, maxTittleLength] = [20,40]
         let flag: boolean = true
         const errorField: Array<keyof createVideo> = []
@@ -89,4 +104,3 @@ export class Store {
         return flag ? flag : errorField
     }
 }
-

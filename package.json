@@ -20,7 +20,8 @@
   "scripts": {
     "start": "node ./dist/src/index.js",
     "dev": "nodemon ./dist/src/index.js",
-    "ts-watch": "tsc -w"
+    "ts-watch": "tsc -w",
+    "test": "jest"
   },
   "type": "commonjs"
 }
