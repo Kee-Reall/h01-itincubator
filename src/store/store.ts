@@ -1,6 +1,6 @@
 import * as videoModels from '../models/video.model';
+import {availableResolutions} from '../models/video.model';
 import {cloneObject} from "../helpers/cloneObject";
-import {availableResolutions} from "../models/video.model";
 import {errorMessage} from "../models/errorMessage.model";
 
 type storeVideo  = videoModels.StoreVideoModel;
@@ -11,8 +11,9 @@ type storeVideos = Array<storeVideo>;
 export class Store {
     state: storeVideos
     private _id: number
+
     constructor(
-        public initialState: storeVideos        
+        public initialState: storeVideos
     ) {
         this.state = cloneObject(this.initialState)
         this._id = -1
@@ -23,13 +24,13 @@ export class Store {
         return this.state
     }
 
-    genereateId() {
+    generateId() {
         this._id += 1
         return this._id
     }
 
     push(element: createVideo): storeVideos| errorMessage {
-        const id = this.genereateId()
+        const id = this.generateId()
         if(!element.hasOwnProperty("availableResolutions")){
             element.availableResolutions = null
         }
@@ -60,8 +61,8 @@ export class Store {
         try {
             this.state = this.state.map( (el: storeVideo) => {
                 if (el.id === id) {
-                    const obj = {...element,id} //вот в этот объект положи новое
-                    return obj
+                     //вот в этот объект положи новое
+                    return {...el, ...element}
                 } else {
                     return el
                 }
@@ -87,8 +88,8 @@ export class Store {
             errorField.push("author")
             flag = false
         }
-        if (element.tittle.length > maxTittleLength || element.tittle.length <= 0) {
-            errorField.push("tittle")
+        if (element.title.length > maxTittleLength || element.title.length <= 0) {
+            errorField.push("title")
             flag = false
         }
         if(element.availableResolutions !== null){
@@ -102,5 +103,9 @@ export class Store {
             }
         }
         return flag ? flag : errorField
+    }
+
+    checkValidUpdate(obj: updateVideo){
+        //validator of correct update Request
     }
 }
