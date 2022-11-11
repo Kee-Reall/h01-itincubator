@@ -29,13 +29,13 @@ export class Store {
         return this._id
     }
 
-    push(element: createVideo): storeVideos | errorMessage {
+    push(element: createVideo): [boolean,number] | [errorMessage] {
         const id = this.generateId()
         if(!element.hasOwnProperty("availableResolutions")){
             element.availableResolutions = null
         }
         const validCall = this.checkValidPush(element)
-        if(validCall) {
+        if(validCall === true) {
             const currentDate = new Date(Date.now());
             const nextDate = new Date(Date.now())
             nextDate.setDate(nextDate.getDate() + 1)
@@ -48,21 +48,22 @@ export class Store {
                 publicationDate: nextDate.toISOString()
             }
             this.state.push(toPush)
-            return this.state
+            return [true, id]
         }else{
-            return {
+            return [{
                 message:"There is some error inside. Check field to see witch field has error",
-                field:validCall
-            }
+                // @ts-ignore
+                field: validCall
+            }]
         }
     }
 
-    update(element: updateVideo,id: number): storeVideo | errorMessage | undefined  {
+    update(element: updateVideo,id: number): true | errorMessage | undefined  {
         const isValid = this.checkValidUpdate(element)
         if(isValid === true){
             // @ts-ignore
             this.state = this.state.map( (el: storeVideo) => el.id === id ? {...el, ...element} :  el)
-            return this.find(id)
+            return true
         }
         else{
             return {
@@ -73,13 +74,33 @@ export class Store {
     }
 
     find(id: number): storeVideo | undefined {
-        return this.state.find(el => el.id === id)
+        return this.state.find( el => el.id === id)
+    }
+
+    delete(id:number):boolean {
+        let flag: boolean = false
+        this.state.filter(el => {
+            if(el.id !== id) {
+                console.log(el.id !== id)
+                flag = true
+                return false
+            } else return true
+        })
+        return flag
     }
 
     checkValidStringsLength(strings: isString):{flag: boolean,errorField: Array<keyof isString>} {
         const [maxAuthorLength, maxTittleLength] = [20,40]
         let flag = true
         const errorField: Array<keyof isString> = []
+        if(typeof strings.author !== "string") {
+            errorField.push("author")
+            flag = false
+        }
+        if(typeof strings.title !== "string") {
+            errorField.push("title")
+            flag = false
+        }
         if (strings.author.length > maxAuthorLength || strings.author.length <= 0) {
             errorField.push("author")
             flag = false
@@ -88,7 +109,9 @@ export class Store {
             errorField.push("title")
             flag = false
         }
-        return {flag,errorField}
+        return {
+            flag,
+            errorField: errorField.filter((el,i,ar)=> i === ar.indexOf(el))}
     }
 
     checkValidResolution(resolutions: Array<string>): boolean  {
@@ -155,3 +178,5 @@ export class Store {
         return flag ? flag : errorField
     }
 }
+
+export const store = new Store([])
