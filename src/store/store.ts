@@ -7,15 +7,14 @@ type storeVideo  = videoModels.StoreVideoModel;
 type createVideo = videoModels.CreateVideoModel;
 type updateVideo = videoModels.UpdateVideoModel;
 type storeVideos = Array<storeVideo>;
-type Istrings = videoModels.Istrings
+type isString = videoModels.IsStrings
 
 export class Store {
     state: storeVideos
     private _id: number
+    readonly availableResolutions: Array<string> = "P144|P240|P360|P480|P720|P1080|P1440|P2160".split("|")
 
-    constructor(
-        public initialState: storeVideos
-    ) {
+    constructor( public initialState: storeVideos) {
         this.state = cloneObject(this.initialState)
         this._id = -1
     }
@@ -30,7 +29,7 @@ export class Store {
         return this._id
     }
 
-    push(element: createVideo): storeVideos| errorMessage {
+    push(element: createVideo): storeVideos | errorMessage {
         const id = this.generateId()
         if(!element.hasOwnProperty("availableResolutions")){
             element.availableResolutions = null
@@ -58,20 +57,18 @@ export class Store {
         }
     }
 
-    update(element: updateVideo,id: number): storeVideo | undefined {
-        try {
-            this.state = this.state.map( (el: storeVideo) => {
-                if (el.id === id) {
-                     //вот в этот объект положи новое
-                    return {...el, ...element}
-                } else {
-                    return el
-                }
-            })
+    update(element: updateVideo,id: number): storeVideo | errorMessage | undefined  {
+        const isValid = this.checkValidUpdate(element)
+        if(isValid === true){
+            // @ts-ignore
+            this.state = this.state.map( (el: storeVideo) => el.id === id ? {...el, ...element} :  el)
             return this.find(id)
-        } catch (e) {
-            console.log('something go wrong\nstate has no change')
-            return undefined
+        }
+        else{
+            return {
+                message:'Some fields are not valid',
+                field: isValid
+            }
         }
     }
 
@@ -79,10 +76,10 @@ export class Store {
         return this.state.find(el => el.id === id)
     }
 
-    checkValidStringsLength(strings: Istrings):{flag: boolean,errorField: Array<keyof Istrings>} {
+    checkValidStringsLength(strings: isString):{flag: boolean,errorField: Array<keyof isString>} {
         const [maxAuthorLength, maxTittleLength] = [20,40]
         let flag = true
-        const errorField: Array<keyof Istrings> = []
+        const errorField: Array<keyof isString> = []
         if (strings.author.length > maxAuthorLength || strings.author.length <= 0) {
             errorField.push("author")
             flag = false
@@ -94,25 +91,29 @@ export class Store {
         return {flag,errorField}
     }
 
-    checkValidPush(element: createVideo): true | Array<keyof createVideo> {
-        
-        
+    checkValidResolution(resolutions: Array<string>): boolean  {
+        let flag = true
+        const errorField: Array<string> = []
+        for(let i of resolutions) {
+            if(!this.availableResolutions.includes(i)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    checkValidPush(element: createVideo): boolean | Array<string> {
         const isStringsValid = this.checkValidStringsLength({
             author:element.author,
             title:element.title
         })
         let {flag} = isStringsValid
-        const errorField: Array<keyof createVideo> = [...isStringsValid.errorField]
-        
-        const availableResolution: string[] = "P144|P240|P360|P480|P720|P1080|P1440|P2160".split("|")
+        let arr: string[] = []
+        const errorField: Array<string> = [...isStringsValid.errorField,...arr]
         if(element.availableResolutions !== null){
-            for(let i of element.availableResolutions){
-                // @ts-ignore
-                if(!availableResolution.includes(i)){
-                    errorField.push("availableResolutions")
-                    flag = false
-                    break
-                }
+            const isAvailableResolutionsValid = this.checkValidResolution(element.availableResolutions)
+            if(!isAvailableResolutionsValid) {
+                errorField.push("availableResolutions")
             }
         }
         return flag ? flag : errorField
@@ -126,7 +127,13 @@ export class Store {
         const isStringsValid = this.checkValidStringsLength({author,title})
         let {flag} = isStringsValid
         const errorField: Array<keyof updateVideo> = [...isStringsValid.errorField]
-        if(typeof canBeDownloaded !== 'boolean'){
+        const isAvailableResolutionsValid = availableResolutions === null ? true : this.checkValidResolution(availableResolutions)
+        if(!isAvailableResolutionsValid){
+            errorField.push("availableResolutions")
+            flag = false
+        }
+
+        if(typeof canBeDownloaded !== 'boolean') {
             errorField.push('canBeDownloaded')
             flag = false
         }
@@ -136,6 +143,11 @@ export class Store {
                 errorField.push('minAgeRestriction')
                 flag = false
             }  
+        }
+        const newDate = +updateElement.publicationDate
+        if(Number.isNaN(newDate)){
+            flag = false
+            errorField.push('publicationDate')
         }
         
             //validator of correct update Request

@@ -32,7 +32,7 @@ export interface StoreVideoModel extends Object {
     availableResolutions: Array<availableResolutions> | null
 }
 
-export interface Istrings {
+export interface IsStrings {
     author:string
     title: string
 }

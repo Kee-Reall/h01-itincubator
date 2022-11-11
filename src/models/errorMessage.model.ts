@@ -1,6 +1,6 @@
 export interface errorMessage {
     message: string
-    field: string
+    field: string[]
 }
 
 export interface APIErrorResult {
