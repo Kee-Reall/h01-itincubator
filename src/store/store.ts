@@ -1,7 +1,8 @@
 import * as videoModels from '../models/video.model';
-import {availableResolutions} from '../models/video.model';
+//import {availableResolutions} from '../models/video.model';
 import {cloneObject} from "../helpers/cloneObject";
 import {errorMessage} from "../models/errorMessage.model";
+//import {isIsoDate} from "../helpers/isIsoDate";
 
 type storeVideo  = videoModels.StoreVideoModel;
 type createVideo = videoModels.CreateVideoModel;
@@ -49,7 +50,8 @@ export class Store {
             }
             this.state.push(toPush)
             return [true, id]
-        }else{
+        }
+        else {
             return [{
                 message:"There is some error inside. Check field to see witch field has error",
                 // @ts-ignore
@@ -115,8 +117,6 @@ export class Store {
     }
 
     checkValidResolution(resolutions: Array<string>): boolean  {
-        let flag = true
-        const errorField: Array<string> = []
         for(let i of resolutions) {
             if(!this.availableResolutions.includes(i)) {
                 return false
@@ -172,11 +172,26 @@ export class Store {
             flag = false
             errorField.push('publicationDate')
         }
+
+        // if (!isIsoDate(publicationDate)) {
+        //     flag = false
+        //     errorField.push('publicationDate')
+        // }
         
-            //validator of correct update Request
+            //validator of correct update
 
         return flag ? flag : errorField
     }
 }
 
 export const store = new Store([])
+
+// for(let i = 0; i < 15 ; i++){
+//     store.push({
+//         "title": "string" + i,
+//         "author": "string" + i,
+//         "availableResolutions": [
+//             "P144"
+//         ]
+//     })
+// }

@@ -1,33 +1,40 @@
 import { Store } from "./store";
-import {before} from "node:test";
 const testStore = new Store([
     {
-        "id": 99,
+        "id": 80,
         "title": "string",
         "author": "string",
         "canBeDownloaded": true,
         "minAgeRestriction": null,
-        "createdAt": "2022-11-10T16:10:55.563Z",
-        "publicationDate": "2022-11-10T16:10:55.563Z",
+        "createdAt": "2022-11-12T08:42:13.114Z",
+        "publicationDate": "2022-11-12T08:42:13.114Z",
         "availableResolutions": [
             "P144"
         ]
     }
 ]);
 
-test("test for inital state", ()=> {
+test("test for initial state", ()=> {
     expect(testStore.state).toEqual([{
-        "id": 0,
+        "id": 80,
         "title": "string",
         "author": "string",
         "canBeDownloaded": true,
         "minAgeRestriction": null,
-        "createdAt": "2022-11-10T16:10:55.563Z",
-        "publicationDate": "2022-11-10T16:10:55.563Z",
+        "createdAt": "2022-11-12T08:42:13.114Z",
+        "publicationDate": "2022-11-12T08:42:13.114Z",
         "availableResolutions": [
             "P144"
         ]
-    }]);
+    }])
+})
+
+test("test after push",()=>{
+    expect(testStore.push({
+        title:'afa',
+        author:'mee',
+        availableResolutions: null
+    })).toEqual([true,0])
 })
 
 // test("test to pull", () => {
