@@ -31,7 +31,6 @@ export class Store {
     }
 
     push(element: createVideo): [boolean,number] | [errorMessage] {
-        const id = this.generateId()
         if(!element.hasOwnProperty("availableResolutions")){
             element.availableResolutions = null
         }
@@ -40,6 +39,7 @@ export class Store {
             const currentDate = new Date(Date.now());
             const nextDate = new Date(Date.now())
             nextDate.setDate(nextDate.getDate() + 1)
+            const id = this.generateId()
             const toPush:storeVideo = {
                 ...element,
                 id,
@@ -167,7 +167,7 @@ export class Store {
                 flag = false
             }  
         }
-        const newDate = +updateElement.publicationDate
+        const newDate = +publicationDate
         if(Number.isNaN(newDate)){
             flag = false
             errorField.push('publicationDate')
