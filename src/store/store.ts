@@ -49,7 +49,7 @@ export class Store {
                 publicationDate: nextDate.toISOString()
             }
             this.state.push(toPush)
-            return [true, id]
+            return [validCall, id]
         }
         else {
             return [{
