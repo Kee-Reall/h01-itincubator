@@ -14,6 +14,12 @@ const testStore = new Store([
     }
 ]);
 
+const pushThenFind = {
+    title:'afa',
+    author:'mee',
+    availableResolutions: null
+}
+
 test("test for initial state", ()=> {
     expect(testStore.state).toEqual([{
         "id": 80,
@@ -30,13 +36,32 @@ test("test for initial state", ()=> {
 })
 
 test("test after push",()=>{
-    expect(testStore.push({
-        title:'afa',
-        author:'mee',
-        availableResolutions: null
-    })).toEqual([true,0])
+    expect(testStore.push(pushThenFind)).toEqual([true,0])
 })
 
-// test("test to pull", () => {
-//     expect(testStore.push())
-// })
+test("find unexist",()=> {
+    expect(testStore.find(NaN)).toEqual(undefined)
+})
+
+test("test for find one",()=>{
+    expect(testStore.find(0)).toEqual({
+        id: 0,
+        ...pushThenFind,
+        canBeDownloaded: false,
+        minAgeRestriction: null,
+        createdAt: expect.any(String),
+        publicationDate: expect.any(String),
+
+    })
+})
+
+test('Push incorrect',()=>{
+    expect(testStore.push({
+        // @ts-ignore
+        title:32,
+        author:'',
+        // @ts-ignore
+        availableResolutions: [33]
+    })).toEqual([{"field": ["title", "author", "availableResolutions"], "message": "There is some error inside. Check field to see witch field has error"}])
+
+})

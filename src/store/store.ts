@@ -76,6 +76,7 @@ export class Store {
     }
 
     find(id: number): storeVideo | undefined {
+        if (Number.isNaN(id)) return undefined
         return this.state.find( el => el.id === id)
     }
 
@@ -117,6 +118,7 @@ export class Store {
     }
 
     checkValidResolution(resolutions: Array<string>): boolean  {
+        if(!Array.isArray(resolutions)) return false
         for(let i of resolutions) {
             if(!this.availableResolutions.includes(i)) {
                 return false
@@ -137,6 +139,7 @@ export class Store {
             const isAvailableResolutionsValid = this.checkValidResolution(element.availableResolutions)
             if(!isAvailableResolutionsValid) {
                 errorField.push("availableResolutions")
+                flag = false
             }
         }
         return flag ? flag : errorField

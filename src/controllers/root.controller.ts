@@ -16,10 +16,17 @@ class RootController {
     }
 
     async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
-        if(Object.entries(req.body).length === 0) res.status(400).json({
-            Message:"incorrect data",
-            field: ['all']
-        })
+        const field: string[] = []
+        if(!req.body.hasOwnProperty('title')) {
+            field.push('title')
+        }
+        if(!req.body.hasOwnProperty('author')) {
+            field.push('author')
+        }
+        if(field.length > 0){
+            res.status(400).json({message:"required more data", field})
+            return
+        }
         const operation = store.push(req.body)
         if (operation[0] === true) {
             res.status(201).json(store.find(operation[1]))
