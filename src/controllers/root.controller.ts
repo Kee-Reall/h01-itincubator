@@ -41,11 +41,19 @@ class RootController {
     }
 
     async updateVideo (req: CustomRequest.UpdateVideoRequest, res: Response){
-        const flag  = store.update(req.body, +req.query.id)
-        if (flag === true){
-            res.sendStatus(204)
-        } else {
-            res.json(flag)
+        if(!store.find(+req.params.id)) {
+            res.sendStatus(404)
+            return
+        }
+        else {
+
+            const flag = store.update(req.body, +req.query.id)
+            if (flag === true) {
+                await res.sendStatus(204)
+                return
+            } else {
+                res.status(400).json(flag)
+            }
         }
     }
 
@@ -59,7 +67,7 @@ class RootController {
         }
     }
 
-    async postWithParam (req: CustomRequest.GetOneVideoRequest, res: Response) {
+    async deprecated (req: CustomRequest.GetOneVideoRequest, res: Response) {
         res.status(405).json({message:"method is deprecated",field:[]})
     }
 }

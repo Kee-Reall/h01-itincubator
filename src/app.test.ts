@@ -1,17 +1,13 @@
 import request from "supertest";
 import app from "./app";
 import {generateRandomString} from "./helpers/generateRandomString";
-import {StoreVideoModel} from "./models/video.model";
+import {StoreVideoModel, UpdateVideoModel} from "./models/video.model";
 
-
-test('test correct test environment',()=>{
- expect(1).toBe(1)
-})
 
 it('getAll',async ()=>{
  await request(app)
      .get('/')
-     .expect(200,[])
+     .expect(200)
 })
 
 test('putNotValid',async ()=>{
@@ -77,4 +73,59 @@ test('put valid then delete, and then delete not existet' ,async ()=>{
         .get('/')
 
     expect(get.body).toEqual(expect.any(Array))
+})
+
+test('Valid update test' ,async ()=> {
+    const number = 13
+    const res = await request(app).get(`/${number}`)
+    expect(res.status).toBe(200)
+    expect(res.body).toEqual(expect.any(Object))
+    const {id} = res.body
+    expect(+id).toBe(number)
+
+    const [author,title] = [generateRandomString(4),generateRandomString(5)]
+    const dat = new Date(Date.now()).toISOString()
+    const updateOne: UpdateVideoModel = {
+        author,
+        title,
+        canBeDownloaded: true,
+        availableResolutions: ["P720","P360"],
+        publicationDate: dat,
+        minAgeRestriction: 13,
+    }
+
+    await request(app).put(`/${id}`).send(updateOne).expect(204)
+
+    const {body: getOne} = await request(app).get(`/${id}`)
+
+    expect(getOne.author).toBe(author)
+    expect(getOne.title).toEqual(expect.any(String))
+    expect(+getOne.id).toBe(number)
+    expect(getOne.canBeDownloaded).toBe(true)
+    expect(getOne.minAgeRestriction).toEqual(13)
+    expect(getOne.availableResolutions).toEqual(["P720","P360"])
+    expect(getOne.publicationDate).toEqual(expect.any(String))
+})
+
+it('update unexisted', async ()=>{
+
+    const [author,title] = [generateRandomString(4),generateRandomString(5)]
+    const dat = new Date(Date.now()).toISOString()
+    const updateOne: UpdateVideoModel = {
+        author,
+        title,
+        canBeDownloaded: true,
+        availableResolutions: ["P720","P360"],
+        publicationDate: dat,
+        minAgeRestriction: 13,
+    }
+    await request(app).put('/34524').send(updateOne).expect(404)
+    await request(app).put('/noexist').send(updateOne).expect(404)
+    await request(app).put('/NaN').send(updateOne).expect(404)
+})
+
+test("invalid update", async ()=> {
+    await request(app).put('/4').send({
+        title:'afaf'
+    }).expect(400)
 })

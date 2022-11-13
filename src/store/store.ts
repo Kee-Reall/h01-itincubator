@@ -2,6 +2,8 @@ import * as videoModels from '../models/video.model';
 //import {availableResolutions} from '../models/video.model';
 import {cloneObject} from "../helpers/cloneObject";
 import {errorMessage} from "../models/errorMessage.model";
+import {isIsoDate} from "../helpers/isIsoDate";
+import {generateRandomString} from "../helpers/generateRandomString";
 //import {isIsoDate} from "../helpers/isIsoDate";
 
 type storeVideo  = videoModels.StoreVideoModel;
@@ -65,7 +67,7 @@ export class Store {
         const isValid = this.checkValidUpdate(element)
         if(isValid === true){
             // @ts-ignore
-            this.state = this.state.map( (el: storeVideo) => el.id === id ? {...el, ...element} :  el)
+            this.state = this.state.map( (el: storeVideo) => el.id !== id ? {...el, ...element,title: element.title,author:element.author} :  el)
             return true
         }
         else{
@@ -164,16 +166,12 @@ export class Store {
                 flag = false
             }  
         }
-        const newDate = +publicationDate
-        if(Number.isNaN(newDate)){
+
+        const pub = new Date(publicationDate)
+        if(!pub.toISOString()) {
             flag = false
             errorField.push('publicationDate')
         }
-
-        // if (!isIsoDate(publicationDate)) {
-        //     flag = false
-        //     errorField.push('publicationDate')
-        // }
         
             //validator of correct update
 
@@ -182,6 +180,13 @@ export class Store {
 }
 
 export const store = new Store([])
+for(let i = 0 ; i < 33 ; i++){
+    store.push({
+        title: generateRandomString(40),
+        author: generateRandomString(20),
+        availableResolutions: null
+    })
+}
 
 // for(let i = 0; i < 15 ; i++){
 //     store.push({
