@@ -29,6 +29,15 @@ class RootController {
             res.status(400).json({message:"required more data", field})
             return
         }
+
+        if(req.body.title === null){
+            field.push('title')
+            if(req.body.author === null){
+                field.push('author')
+            }
+            res.status(400).json({message:"null is forbidden",field})
+            return
+        }
         // if(req.body.availableResolutions === undefined && req.body.hasOwnProperty('availableResolutions')) {
         //     field.push('availableResolutions')
         //     res.status(400).json({message:"incorrect availableResolutions",field})
