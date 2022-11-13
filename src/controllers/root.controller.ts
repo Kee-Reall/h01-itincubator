@@ -38,6 +38,8 @@ class RootController {
             res.status(400).json({message:"null is forbidden",field})
             return
         }
+
+
         // if(req.body.availableResolutions === undefined && req.body.hasOwnProperty('availableResolutions')) {
         //     field.push('availableResolutions')
         //     res.status(400).json({message:"incorrect availableResolutions",field})
