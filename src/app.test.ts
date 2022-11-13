@@ -3,16 +3,17 @@ import app from "./app";
 import {generateRandomString} from "./helpers/generateRandomString";
 import {StoreVideoModel, UpdateVideoModel} from "./models/video.model";
 
+const videoURL = '/hometask_01/api/videos'
 
 it('getAll',async ()=>{
  await request(app)
-     .get('/')
+     .get(videoURL)
      .expect(200)
 })
 
 test('putNotValid',async ()=>{
  await  request(app)
-     .post('/')
+     .post(videoURL)
      .send({})
      .expect(400,{
       message:"required more data",
@@ -20,7 +21,7 @@ test('putNotValid',async ()=>{
      })
 
     const res = await request(app)
-        .post('/')
+        .post(videoURL)
         .send({
             title:generateRandomString(8),
             author: generateRandomString(18),
@@ -35,7 +36,7 @@ test('putNotValid',async ()=>{
 it('put valid',async ()=>{
     const post = {title:generateRandomString(5),author:generateRandomString(6)}
     const {status, body} = await request(app)
-        .post('/')
+        .post(videoURL)
         .send(post)
     const {id,canBeDownloaded,author,title,minAgeRestriction,createdAt,publicationDate,availableResolutions}: StoreVideoModel = body
 
@@ -54,30 +55,30 @@ it('put valid',async ()=>{
 test('put valid then delete, and then delete not existet' ,async ()=>{
     const post = {title:generateRandomString(5),author:generateRandomString(6)}
     const req = await request(app)
-        .post('/')
+        .post(videoURL)
         .send(post)
     expect(req.status).toBe(201)
     expect(req.body.hasOwnProperty('id')).toBe(true)
 
     const del = await request(app)
-        .delete(`/${req.body.id}`)
+        .delete(`${videoURL}/${req.body.id}`)
 
     expect(del.status).toBe(204)
 
     const del2 = await request(app)
-        .delete(`/${req.body.id}`)
+        .delete(`${videoURL}/${req.body.id}`)
 
     expect(del2.status).toBe(404)
 
     const get = await request(app)
-        .get('/')
+        .get(videoURL)
 
     expect(get.body).toEqual(expect.any(Array))
 })
 
 test('Valid update test' ,async ()=> {
     const number = 13
-    const res = await request(app).get(`/${number}`)
+    const res = await request(app).get(`${videoURL}/${number}`)
     expect(res.status).toBe(200)
     expect(res.body).toEqual(expect.any(Object))
     const {id} = res.body
@@ -94,9 +95,9 @@ test('Valid update test' ,async ()=> {
         minAgeRestriction: 13,
     }
 
-    await request(app).put(`/${id}`).send(updateOne).expect(204)
+    await request(app).put(`${videoURL}/${id}`).send(updateOne).expect(204)
 
-    const {body: getOne} = await request(app).get(`/${id}`)
+    const {body: getOne} = await request(app).get(`${videoURL}/${id}`)
 
     expect(getOne.author).toBe(author)
     expect(getOne.title).toEqual(expect.any(String))
@@ -107,7 +108,7 @@ test('Valid update test' ,async ()=> {
     expect(getOne.publicationDate).toEqual(expect.any(String))
 })
 
-it('update unexisted', async ()=>{
+it('update non existed', async ()=>{
 
     const [author,title] = [generateRandomString(4),generateRandomString(5)]
     const dat = new Date(Date.now()).toISOString()
@@ -119,13 +120,13 @@ it('update unexisted', async ()=>{
         publicationDate: dat,
         minAgeRestriction: 13,
     }
-    await request(app).put('/34524').send(updateOne).expect(404)
-    await request(app).put('/noexist').send(updateOne).expect(404)
-    await request(app).put('/NaN').send(updateOne).expect(404)
+    await request(app).put(`${videoURL}/34524`).send(updateOne).expect(404)
+    await request(app).put(`${videoURL}/noexist`).send(updateOne).expect(404)
+    await request(app).put(`${videoURL}/NaN`).send(updateOne).expect(404)
 })
 
 test("invalid update, not all data", async ()=> {
-    const res = await request(app).put('/4').send({
+    const res = await request(app).put(`${videoURL}/4`).send({
         title:'afaf'
     })
     expect(res.status).toBe(400)
@@ -154,8 +155,8 @@ test("invalid update, some of data incorrect", async ()=> {
         minAgeRestriction: 10,
     }
 
-    const res = await request(app).put('/4').send(updateOne)
-    const res2 = await request(app).put('/24').send(updateTwo)
+    const res = await request(app).put(`${videoURL}/4`).send(updateOne)
+    const res2 = await request(app).put(`${videoURL}/24`).send(updateTwo)
 
     expect(res.status).toEqual(400)
     expect(res2.status).toBe(400)

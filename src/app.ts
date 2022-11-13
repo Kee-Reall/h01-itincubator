@@ -5,6 +5,6 @@ const app = express()
 const bodyParser = express.json()
 app.use(bodyParser)
 
-app.use(rootRouter)
+app.use('/hometask_01/api/videos',rootRouter)
 
 export default app
