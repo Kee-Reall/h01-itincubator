@@ -13,7 +13,7 @@ class RootController {
 
     async getOneById(req: CustomRequest.GetOneVideoRequest, res: Response) {
         const found: any = store.find(+req.params.id)
-        found === undefined ? res.sendStatus(404) : res.json(found)
+        found === undefined ? res.status(404).json({"message":"not found", field:[]}) : res.json(found)
     }
 
     async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
