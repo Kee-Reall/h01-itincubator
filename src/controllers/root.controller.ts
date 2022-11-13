@@ -1,6 +1,7 @@
 import { Response } from "express";
 import * as CustomRequest from "../models/request.model"
 import {store} from "../store/store";
+import {isAllFieldsHave} from "../helpers/isAllFieldsHave";
 
 class RootController {
 
@@ -46,7 +47,11 @@ class RootController {
             return
         }
         else {
-
+            const [bol,massive] = isAllFieldsHave(req.body)
+            if(!bol){
+                res.status(400).json(massive)
+                return
+            }
             const flag = store.update(req.body, +req.query.id)
             if (flag === true) {
                 await res.sendStatus(204)

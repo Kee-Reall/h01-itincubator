@@ -124,8 +124,44 @@ it('update unexisted', async ()=>{
     await request(app).put('/NaN').send(updateOne).expect(404)
 })
 
-test("invalid update", async ()=> {
-    await request(app).put('/4').send({
+test("invalid update, not all data", async ()=> {
+    const res = await request(app).put('/4').send({
         title:'afaf'
-    }).expect(400)
+    })
+    expect(res.status).toBe(400)
+    expect(res.body.message).toBe("required more data")
+    expect(res.body.field).toEqual(expect.any(Array))
+})
+
+test("invalid update, some of data incorrect", async ()=> {
+    const [author,title] = [generateRandomString(4),generateRandomString(5)]
+    const dat = new Date(Date.now()).toISOString()
+    const updateOne = {
+        author,
+        title,
+        canBeDownloaded: true,
+        availableResolutions: ["P720","P360"],
+        publicationDate: dat,
+        minAgeRestriction: 20,
+    }
+
+    const updateTwo = {
+        author,
+        title,
+        canBeDownloaded: true,
+        availableResolutions: ["P720","P360"],
+        publicationDate: 13,
+        minAgeRestriction: 10,
+    }
+
+    const res = await request(app).put('/4').send(updateOne)
+    const res2 = await request(app).put('/24').send(updateTwo)
+
+    expect(res.status).toEqual(400)
+    expect(res2.status).toBe(400)
+    expect(res2.body).toEqual({
+        "message": "Some fields are not valid",
+        "field": [
+        "publicationDate"
+    ]})
 })

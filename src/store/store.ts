@@ -16,6 +16,7 @@ export class Store {
     state: storeVideos
     private _id: number
     readonly availableResolutions: Array<string> = "P144|P240|P360|P480|P720|P1080|P1440|P2160".split("|")
+    private _clear: Array<storeVideo> = []
 
     constructor( public initialState: storeVideos) {
         this.state = cloneObject(this.initialState)
@@ -25,6 +26,10 @@ export class Store {
     setInitialState(): storeVideos {
         this.state = cloneObject(this.initialState)
         return this.state
+    }
+
+    clearAll(): void {
+        this.state = [...[]]
     }
 
     generateId() {
@@ -161,14 +166,13 @@ export class Store {
         }
         // @ts-ignore
         if ( minAgeRestriction !== null) {
-            if ( typeof minAgeRestriction !== "number" && (minAgeRestriction > 18 || minAgeRestriction < 0)) {
+            if ( typeof minAgeRestriction !== "number" || minAgeRestriction > 18 || minAgeRestriction < 0) {
                 errorField.push('minAgeRestriction')
                 flag = false
             }  
         }
 
-        const pub = new Date(publicationDate)
-        if(!pub.toISOString()) {
+        if(!isIsoDate(publicationDate)) {
             flag = false
             errorField.push('publicationDate')
         }
