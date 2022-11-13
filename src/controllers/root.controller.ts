@@ -35,7 +35,7 @@ class RootController {
             if(req.body.author === null){
                 field.push('author')
             }
-            res.status(400).json({errorMessages:[{message:"null is forbidden",field: field.join(' ')}]})
+            res.status(400).json({errorsMessages:[{message:"null is forbidden",field: field.join(' ')}]})
             return
         }
         // if(req.body.availableResolutions === undefined && req.body.hasOwnProperty('availableResolutions')) {
