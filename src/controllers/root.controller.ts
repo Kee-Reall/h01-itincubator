@@ -35,7 +35,7 @@ class RootController {
             if(req.body.author === null){
                 field.push('author')
             }
-            res.status(400).json({message:"null is forbidden",field: field.join(' ')})
+            res.status(400).json({errorMessages:[{message:"null is forbidden",field: field.join(' ')}]})
             return
         }
         // if(req.body.availableResolutions === undefined && req.body.hasOwnProperty('availableResolutions')) {
@@ -50,7 +50,7 @@ class RootController {
         }
     }
 
-    async updateVideo (req: CustomRequest.UpdateVideoRequest, res: Response){
+    async updateVideo(req: CustomRequest.UpdateVideoRequest, res: Response) {
         if(!store.find(+req.params.id)) {
             res.sendStatus(404)
             return

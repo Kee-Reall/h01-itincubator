@@ -168,8 +168,13 @@ test("invalid update, some of data incorrect", async ()=> {
 })
 
 it('should clear all',async ()=>{
-    await request(app).delete(`/ht_01/api/testing/all-data`).expect(204)
+    await request(app).delete(`/hometask_01/api/testing/all-data`).expect(204)
     const ar = await request(app).get(videoURL)
     expect(ar.status).toBe(200)
     expect(ar.body).toEqual([])
+})
+
+it('same test as auto', async ()=> {
+    const res = await request(app).post(videoURL).send({"title":"some title","author":"some author","availableResolutions":["P144"]})
+    expect(res.status).toBe(201)
 })
