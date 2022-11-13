@@ -7,6 +7,6 @@ const bodyParser = express.json()
 app.use(bodyParser)
 
 app.use('/hometask_01/api/videos',rootRouter)
-app.use('/ht_01/api/testing',testingRouter)
+app.use('/hometask_01/api/testing',testingRouter)
 
 export default app

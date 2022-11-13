@@ -166,3 +166,10 @@ test("invalid update, some of data incorrect", async ()=> {
         "publicationDate"
     ]})
 })
+
+it('should clear all',async ()=>{
+    await request(app).delete(`/ht_01/api/testing/all-data`).expect(204)
+    const ar = await request(app).get(videoURL)
+    expect(ar.status).toBe(200)
+    expect(ar.body).toEqual([])
+})
