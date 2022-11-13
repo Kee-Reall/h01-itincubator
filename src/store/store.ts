@@ -39,6 +39,7 @@ export class Store {
             const currentDate = new Date(Date.now());
             const nextDate = new Date(Date.now())
             nextDate.setDate(nextDate.getDate() + 1)
+            //@ts-ignore
             const id = this.generateId()
             const toPush:storeVideo = {
                 ...element,
@@ -81,15 +82,8 @@ export class Store {
     }
 
     delete(id:number):boolean {
-        let flag: boolean = false
-        this.state.filter(el => {
-            if(el.id !== id) {
-                console.log(el.id !== id)
-                flag = true
-                return false
-            } else return true
-        })
-        return flag
+        this.state = this.state.filter(el => el.id !== id)
+        return this.find(id) === undefined
     }
 
     checkValidStringsLength(strings: isString):{flag: boolean,errorField: Array<keyof isString>} {

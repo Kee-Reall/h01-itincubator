@@ -16,7 +16,8 @@ class RootController {
     }
 
     async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
-        const field: string[] = []
+        type fieldStr = "title"|"author"|"availableResolutions"
+        const field: Array<fieldStr> = []
         if(!req.body.hasOwnProperty('title')) {
             field.push('title')
         }
@@ -27,6 +28,10 @@ class RootController {
             res.status(400).json({message:"required more data", field})
             return
         }
+        // if(req.body.availableResolutions === undefined && req.body.hasOwnProperty('availableResolutions')) {
+        //     field.push('availableResolutions')
+        //     res.status(400).json({message:"incorrect availableResolutions",field})
+        // }
         const operation = store.push(req.body)
         if (operation[0] === true) {
             res.status(201).json(store.find(operation[1]))
@@ -44,12 +49,18 @@ class RootController {
         }
     }
 
-    async deleteVideo (req: CustomRequest.DeleteVideoRequest, res: Response){
-        if(store.delete(+req.params.id)) {
-            res.sendStatus(204)
-        } else {
+    async deleteVideo (req: CustomRequest.DeleteVideoRequest, res: Response) {
+        if(store.find(+req.params.id) === undefined) {
             res.sendStatus(404)
         }
+        else {
+            store.delete(+req.params.id)
+            res.sendStatus(204)
+        }
+    }
+
+    async postWithParam (req: CustomRequest.GetOneVideoRequest, res: Response) {
+        res.status(405).json({message:"method is deprecated",field:[]})
     }
 }
 
