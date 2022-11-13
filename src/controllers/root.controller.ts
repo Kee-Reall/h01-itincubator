@@ -71,6 +71,7 @@ class RootController {
         }
     }
 
+
     async deleteVideo (req: CustomRequest.DeleteVideoRequest, res: Response) {
         if(store.find(+req.params.id) === undefined) {
             res.sendStatus(404)
