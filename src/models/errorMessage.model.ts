@@ -7,9 +7,3 @@ export class ErrorMessage {
         public field: fields = ""
     ) {}
 }
-
-export function ApiError(...errorMesages:ErrorMessage[]){
-    return {
-        errorMesages
-    }
-}

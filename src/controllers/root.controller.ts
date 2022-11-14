@@ -2,9 +2,9 @@ import { Response } from "express";
 import * as CustomRequest from "../models/request.model"
 import { store } from "../store/store";
 import { httpStatus } from "../helpers/httpStatus";
-import { ApiError, ErrorMessage } from "../models/errorMessage.model";
+import { ErrorMessage } from "../models/errorMessage.model";
 import { getCreateError } from "../helpers/getCreateError";
-
+import { ApiError} from "../helpers/ApiError";
 
 
 class RootController {
@@ -17,7 +17,6 @@ class RootController {
 
     async getOneById(req: CustomRequest.GetOneVideoRequest, res: Response) {
         const found: any = store.find(+req.params.id)
-        console.log(found)
         if (found === undefined){
             res.sendStatus(httpStatus.nofFound)
         }
@@ -28,17 +27,37 @@ class RootController {
 
     async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
         if(store.createAllFieldHas(req.body)) {
-            if(store.createFieldsCorrect({})) {
-                console.log('never get here')
+            if(store.createFieldsCorrect(req.body)) {
+                const id = store.push(req.body)
+                const found: any = store.find(id)
+                res.status(httpStatus.created).json(found)
                 return
             }
         }
-        const j = ApiError(...getCreateError(req.body))
         res.status(httpStatus.badRequest).json(ApiError(...getCreateError(req.body)))
     }
 
     async updateVideo(req: CustomRequest.UpdateVideoRequest, res: Response) {
-        
+        if(store.find(+req.params.id) === undefined){
+            res.sendStatus(httpStatus.nofFound)
+            return
+        }
+        if(store.updateAllFieldsHas(req.body)){
+            console.log("all has")
+            if(store.updateAllFieldsCorrect(req.body)) {
+                //store.update({...req.body},+req.params.id)
+                console.log('should push')
+                res.sendStatus(httpStatus.noContent)
+                return
+            }else{
+            console.log('notall has')
+            }
+        }
+        res.status(httpStatus.badRequest).json({"ApiError":"(...updateCreateError(req.body))"})
+
+        //res.status(httpStatus.badRequest).json("ApiError(...updateCreateError(req.body))")
+
+
     }
 
 

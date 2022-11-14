@@ -3,6 +3,7 @@ import app from "./app";
 import {generateRandomString} from "./helpers/generateRandomString";
 import { isIsoDate } from "./helpers/isIsoDate";
 import {StoreVideoModel, UpdateVideoModel} from "./models/video.model";
+import {httpStatus} from "./helpers/httpStatus";
 
 const videoURL = '/hometask_01/api/videos'
 
@@ -20,6 +21,12 @@ it('get one',async() => {
     expect(res.body.title).toEqual(expect.any(String))
     expect(isIsoDate(res.body.createdAt)).toBe(true)
 
+})
+
+it('crate incorrect',async () => {
+    const res1 = await request(app).post(videoURL).send({title:"",author:generateRandomString(4)})
+    expect(res1.status).toBe(httpStatus.badRequest)
+    expect(res1.body.errorMesages).toEqual(expect.any(Array))
 })
 
 // test('putNotValid',async ()=>{

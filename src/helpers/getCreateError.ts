@@ -2,11 +2,12 @@ import e from "express";
 import { ErrorMessage, fields } from "../models/errorMessage.model";
 import { lengthLimits } from "./lengthLimits";
 import { message } from './message'
+import {checkValidResolution} from "./checkValidResolution";
 
 interface K extends Object {
     author: string,
     title: string
-    avaliableResolutions? : string[] | null
+    availableResolutions? : string[] | null
 }
 
 export function getCreateError(body: K):ErrorMessage[] {
@@ -19,7 +20,7 @@ export function getCreateError(body: K):ErrorMessage[] {
     } else {
         if(typeof body.title !== 'string' ) addErM(message.incorrectType,"title")
         else {
-            if(body.title.length > 40 || body.title.length < 1) {
+            if(body.title.trim().length > 40 || body.title.trim().length < 1) {
                 addErM(message.lengthInvalid,"title")
             }
         }
@@ -29,27 +30,25 @@ export function getCreateError(body: K):ErrorMessage[] {
     } else {
         if(typeof body.author !== 'string' ) addErM(message.incorrectType,'author')
         else {
-            if(body.author.length > 20 || body.author.length < 1) {
-                console.log('why')
+            if(body.author.trim().length > 20 || body.author.trim().length < 1) {
                 addErM(message.lengthInvalid,"author")
             }
         }
     }
 
-    if(body.hasOwnProperty('avaliableResolution')) {
-        if(body.avaliableResolutions !== null) {
-           if(!Array.isArray(body.avaliableResolutions)) { 
-                addErM(message.invalidResolution,'availableResolutions')
-            }
-            else {
-                for(let i of body.avaliableResolutions) {
-                    // @ts-ignore
-                    if(!availableResolutions.includes(i)) {
-                        addErM(message.invalidResolution,'availableResolutions')
-                        break;
-                    }
-                }
-            }
+    if(body.hasOwnProperty('availableResolutions')) {
+        if(body.availableResolutions !== null) {
+           if(Array.isArray(body.availableResolutions)) {
+               if(body.availableResolutions.length <= 0) addErM(message.lengthInvalid,'availableResolutions')
+               else {
+                   if(!checkValidResolution(body.availableResolutions)) {
+                   addErM(message.invalidResolution, 'availableResolutions')
+                   }
+               }
+           }
+           else {
+               addErM(message.invalidResolution, 'availableResolutions')
+           }
         }
     }
     return errorsMessages

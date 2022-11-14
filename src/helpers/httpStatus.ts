@@ -4,6 +4,5 @@ export enum httpStatus {
     noContent = 204,
     badRequest = 400,
     nofFound = 404,
-    methodDeprecated = 405 
-
+    methodDeprecated = 405
 }

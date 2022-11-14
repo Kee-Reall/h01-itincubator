@@ -14,7 +14,7 @@ export interface CreateVideoModel {
     availableResolutions: Array<availableResolutions> | null
 }
 
-export interface UpdateVideoModel {
+export interface UpdateVideoModel extends Object {
     author: string
     title: string
     canBeDownloaded: boolean
@@ -32,11 +32,6 @@ export interface StoreVideoModel extends Object {
     createdAt: string
     publicationDate: string
     availableResolutions: Array<availableResolutions> | null
-}
-
-export interface IsStrings {
-    author:string
-    title: string
 }
 //i need to limit strings there is 3 way
 // 1 make correct genericType
