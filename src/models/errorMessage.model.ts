@@ -1,8 +1,16 @@
-export interface errorMessage {
-    message: string
-    field: string[]
+type fields = "id"|"title"|"author"|"canBeDownloaded"|"minAgeRestriction"|
+    "createdAt"|"publicationDate"|"availableResolutions"|""
+
+export class ErrorMessage {
+    constructor(
+        public message: string = "unknown error",
+        public field: fields = ""
+    ) {}
 }
 
-export interface APIErrorResult {
-    errorsMessages: Array<errorMessage>
+export class ApiError {
+    public errorsMessages: ErrorMessage[] = []
+    constructor(private Array: ErrorMessage[]) {
+        this.errorsMessages = [...Array]
+    } 
 }

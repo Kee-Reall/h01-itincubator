@@ -1,52 +1,36 @@
-import { Response } from "express";
+import e, { Response } from "express";
 import * as CustomRequest from "../models/request.model"
 import {store} from "../store/store";
 import {isAllFieldsHave} from "../helpers/isAllFieldsHave";
+import { httpStatus } from "../helpers/httpStatus";
+import { ApiError, ErrorMessage } from "../models/errorMessage.model";
 
 class RootController {
 
     constructor() {}
 
     async getAll(req: CustomRequest.GetAllVideoRequest, res: Response):Promise<void> {
-        res.json(store.state)
+        res.status(httpStatus.ok).json(store.state)
     }
 
     async getOneById(req: CustomRequest.GetOneVideoRequest, res: Response) {
         const found: any = store.find(+req.params.id)
-        found === undefined ? res.status(404).json({"message":"not found", field:[]}) : res.json(found)
+        if (found !== undefined){
+            res.sendStatus(httpStatus.nofFound)
+            return
+        }
+        else {
+            res.status(httpStatus.ok).json(found)
+        }
     }
 
     async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
-        type fieldStr = "title"|"author"|"availableResolutions"
-        const field: Array<fieldStr> = []
-        if(!req.body.hasOwnProperty('title')) {
-            field.push('title')
-        }
-        if(!req.body.hasOwnProperty('author')) {
-            field.push('author')
-        }
-        if(field.length > 0){
-            res.status(400).json({message:"required more data", field})
-            return
-        }
+        if(store.createAllFieldHas(req.body)) {
+            if(store.createFieldsCorrect) {
 
-        if(req.body.title === null){
-            field.push('title')
-            if(req.body.author === null){
-                field.push('author')
             }
-            res.status(400).json({errorsMessages:[{message:"null is forbidden",field: field.join(' ')}]})
-            return
-        }
-        // if(req.body.availableResolutions === undefined && req.body.hasOwnProperty('availableResolutions')) {
-        //     field.push('availableResolutions')
-        //     res.status(400).json({message:"incorrect availableResolutions",field})
-        // }
-        const operation = store.push(req.body)
-        if (operation[0] === true) {
-            res.status(201).json(store.find(operation[1]))
-        } else {
-            res.status(400).json(operation[0])
+        }else{
+
         }
     }
 
@@ -83,7 +67,9 @@ class RootController {
     }
 
     async deprecated (req: CustomRequest.GetOneVideoRequest, res: Response) {
-        res.status(405).json({message:"method is deprecated",field:[]})
+        res.status(405).json(new ApiError([
+            new ErrorMessage("Method is deprecated", "")
+        ]))
     }
 }
 
