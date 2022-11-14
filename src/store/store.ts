@@ -96,14 +96,11 @@ class Store {
     }
 
     updateAllFieldsHas(body: updateVideo): boolean {
-        return this.createAllFieldHas(body) && body.hasOwnProperty('canBeDownloaded')
-            && body.hasOwnProperty('minAgeRestriction')
-            && body.hasOwnProperty('availableResolution')
-            && body.hasOwnProperty('publicationDate')
+        return body.hasOwnProperty('title') && body.hasOwnProperty('canBeDownloaded') && body.hasOwnProperty('author') && body.hasOwnProperty('minAgeRestriction') && body.hasOwnProperty('availableResolutions') && body.hasOwnProperty('publicationDate')
     }
 
     updateAllFieldsCorrect(body: updateVideo): boolean {
-        if(!this.createFieldsCorrect(body)) return false // check same field as created Video
+        if(this.createFieldsCorrect(body)) return false // check same field as created Video
         if(typeof body.canBeDownloaded !== 'boolean')  return false
 
         if(typeof body.minAgeRestriction !== 'number') return false
@@ -111,7 +108,8 @@ class Store {
         if(Number.isNaN(body.minAgeRestriction)) return false
         if(body.minAgeRestriction > 18 || body.minAgeRestriction < 0) return false
 
-        return (isIsoDate(body.publicationDate))
+        if(!isIsoDate(body.publicationDate)) return false
+        return true
     }
 
     delete(id:number) {
