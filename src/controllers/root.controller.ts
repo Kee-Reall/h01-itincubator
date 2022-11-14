@@ -1,9 +1,11 @@
-import e, { Response } from "express";
+import { Response } from "express";
 import * as CustomRequest from "../models/request.model"
-import {store} from "../store/store";
-import {isAllFieldsHave} from "../helpers/isAllFieldsHave";
+import { store } from "../store/store";
 import { httpStatus } from "../helpers/httpStatus";
 import { ApiError, ErrorMessage } from "../models/errorMessage.model";
+import { getCreateError } from "../helpers/getCreateError";
+
+
 
 class RootController {
 
@@ -15,9 +17,9 @@ class RootController {
 
     async getOneById(req: CustomRequest.GetOneVideoRequest, res: Response) {
         const found: any = store.find(+req.params.id)
-        if (found !== undefined){
+        console.log(found)
+        if (found === undefined){
             res.sendStatus(httpStatus.nofFound)
-            return
         }
         else {
             res.status(httpStatus.ok).json(found)
@@ -26,33 +28,15 @@ class RootController {
 
     async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
         if(store.createAllFieldHas(req.body)) {
-            if(store.createFieldsCorrect) {
-
+            if(store.createFieldsCorrect({})) {
+                console.info('deprecated')
             }
-        }else{
-
         }
+        res.status(httpStatus.badRequest).json(new ApiError(getCreateError(req.body)))
     }
 
     async updateVideo(req: CustomRequest.UpdateVideoRequest, res: Response) {
-        if(!store.find(+req.params.id)) {
-            res.sendStatus(404)
-            return
-        }
-        else {
-            const [bol,massive] = isAllFieldsHave(req.body)
-            if(!bol){
-                res.status(400).json(massive)
-                return
-            }
-            const flag = store.update(req.body, +req.query.id)
-            if (flag === true) {
-                await res.sendStatus(204)
-                return
-            } else {
-                res.status(400).json(flag)
-            }
-        }
+        
     }
 
 
@@ -72,6 +56,7 @@ class RootController {
         ]))
     }
 }
+
 
 const rootController = new RootController()
 export default rootController
