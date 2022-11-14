@@ -41,17 +41,11 @@ class Store {
     }
 
     createAllFieldHas(body: Object): boolean {
-        if(!body.hasOwnProperty('title')) {
-            return false
-        }
-        if(!body.hasOwnProperty('author')) {
-            return false
-        }
-        return true
+        return body.hasOwnProperty('title') && body.hasOwnProperty('author')
     }
 
     createFieldsCorrect(body: Object): boolean {
-        return true
+        return false
     }
 
 

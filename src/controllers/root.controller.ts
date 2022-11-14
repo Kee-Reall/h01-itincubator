@@ -29,10 +29,12 @@ class RootController {
     async createVideo(req: CustomRequest.CreateVideoRequest, res: Response) {
         if(store.createAllFieldHas(req.body)) {
             if(store.createFieldsCorrect({})) {
-                console.info('deprecated')
+                console.log('never get here')
+                return
             }
         }
-        res.status(httpStatus.badRequest).json(new ApiError(getCreateError(req.body)))
+        const j = ApiError(...getCreateError(req.body))
+        res.status(httpStatus.badRequest).json(ApiError(...getCreateError(req.body)))
     }
 
     async updateVideo(req: CustomRequest.UpdateVideoRequest, res: Response) {
@@ -51,9 +53,7 @@ class RootController {
     }
 
     async deprecated (req: CustomRequest.GetOneVideoRequest, res: Response) {
-        res.status(405).json(new ApiError([
-            new ErrorMessage("Method is deprecated", "")
-        ]))
+        res.status(405).json(ApiError(new ErrorMessage("Method is deprecated", "")))
     }
 }
 

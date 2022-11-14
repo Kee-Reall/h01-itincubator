@@ -8,9 +8,8 @@ export class ErrorMessage {
     ) {}
 }
 
-export class ApiError {
-    public errorsMessages: ErrorMessage[] = []
-    constructor(private Array: ErrorMessage[]) {
-        this.errorsMessages = [...Array]
-    } 
+export function ApiError(...errorMesages:ErrorMessage[]){
+    return {
+        errorMesages
+    }
 }
