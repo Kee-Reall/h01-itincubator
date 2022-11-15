@@ -5,7 +5,7 @@ import { httpStatus } from "../helpers/httpStatus";
 import { ErrorMessage } from "../models/errorMessage.model";
 import { getCreateError } from "../helpers/getCreateError";
 import { ApiError} from "../helpers/ApiError";
-import { getUpdateError } from "../helpers/updateCreateError";
+import { getUpdateError } from "../helpers/getUpdateError";
 
 
 class RootController {
@@ -50,7 +50,7 @@ class RootController {
                 res.sendStatus(httpStatus.noContent)
                 return
             }else{
-                console.log('notall has')
+                console.log('not all has')
             }
         }
 
