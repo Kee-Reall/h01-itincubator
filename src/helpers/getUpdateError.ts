@@ -30,7 +30,7 @@ export function getUpdateError(body: UpdateVideoModel): ErrorMessage[] {
         if(body.minAgeRestriction !== null) {
             if(typeof body.minAgeRestriction === 'number') {
                 const isCorrectLengh = body.minAgeRestriction > 18 || body.minAgeRestriction < 0
-                if(Number.isNaN(body.minAgeRestriction) || Number.isInteger(body.minAgeRestriction || isCorrectLengh)){
+                if(!Number.isNaN(body.minAgeRestriction) || Number.isInteger(body.minAgeRestriction || isCorrectLengh)){
                     addErM(message.invalidData, 'minAgeRestriction')
                 }
             }
