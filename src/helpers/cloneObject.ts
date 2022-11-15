@@ -1,1 +1,1 @@
-export const cloneObject = (obj: Object) => JSON.parse(JSON.stringify(obj))
+export const cloneObject = (obj: any) => JSON.parse(JSON.stringify(obj))

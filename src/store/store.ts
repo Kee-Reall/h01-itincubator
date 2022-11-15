@@ -6,6 +6,7 @@ import {generateRandomString} from "../helpers/generateRandomString";
 import {message} from "../helpers/message";
 import {checkValidResolution} from "../helpers/checkValidResolution";
 import {type} from "os";
+import e from 'express';
 
 
 type storeVideo  = videoModels.StoreVideoModel;
@@ -92,7 +93,20 @@ class Store {
 
 
     update(element: updateVideo,id: number) {
-
+        this.state = this.state.map((el) => {
+            if(el.id === id) {
+                return cloneObject({
+                        ...el,
+                        canBeDownloaded: element.canBeDownloaded,
+                        author: element.author,
+                        title: element.title,
+                        availableResolutions: element.availableResolutions,
+                        publicationDate: element.publicationDate,
+                        minAgeRestriction: element.minAgeRestriction
+                    })
+                }
+            return el
+        })    
     }
 
     updateAllFieldsHas(body: updateVideo): boolean {
@@ -100,13 +114,14 @@ class Store {
     }
 
     updateAllFieldsCorrect(body: updateVideo): boolean {
-        if(this.createFieldsCorrect(body)) return false // check same field as created Video
+        if(!this.createFieldsCorrect(body)) return false // check same field as created Video
         if(typeof body.canBeDownloaded !== 'boolean')  return false
-
-        if(typeof body.minAgeRestriction !== 'number') return false
-        if(!Number.isInteger(body.minAgeRestriction))  return false
-        if(Number.isNaN(body.minAgeRestriction)) return false
-        if(body.minAgeRestriction > 18 || body.minAgeRestriction < 0) return false
+        if(body.minAgeRestriction !== null) {
+            if(typeof body.minAgeRestriction !== 'number') return false
+            if(!Number.isInteger(body.minAgeRestriction))  return false
+            if(Number.isNaN(body.minAgeRestriction)) return false
+            if(body.minAgeRestriction > 18 || body.minAgeRestriction < 0) return false
+        }
 
         if(!isIsoDate(body.publicationDate)) return false
         return true

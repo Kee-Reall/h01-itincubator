@@ -39,16 +39,13 @@ class RootController {
 
     async updateVideo(req: CustomRequest.UpdateVideoRequest, res: Response) {
         if(store.find(+req.params.id) === undefined) {
-            console.log('before 404')
-            await res.sendStatus(httpStatus.nofFound)
+            res.sendStatus(httpStatus.nofFound)
+            return
         }
-        console.log(req.body)
-        console.log(store.updateAllFieldsHas(req.body))
         if(store.updateAllFieldsHas(req.body)){
             console.log("all has")
             if(store.updateAllFieldsCorrect(req.body)) {
-                //store.update({...req.body},+req.params.id)
-                console.log('should push')
+                store.update(req.body,+req.params.id)
                 res.sendStatus(httpStatus.noContent)
                 return
             }else{
