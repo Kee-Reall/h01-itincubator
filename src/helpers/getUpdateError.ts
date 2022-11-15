@@ -28,11 +28,10 @@ export function getUpdateError(body: UpdateVideoModel): ErrorMessage[] {
     }
     if(body.hasOwnProperty('minAgeRestriction')) {
         if(body.minAgeRestriction !== null) {
-            if(typeof body.minAgeRestriction === 'number') {
-                const isCorrectLengh = body.minAgeRestriction <= 18 && body.minAgeRestriction >= 0
-                if(Number.isNaN(body.minAgeRestriction) || !Number.isInteger(body.minAgeRestriction || !isCorrectLengh)){
-                    addErM(message.invalidData, 'minAgeRestriction')
-                }
+            if(typeof body.minAgeRestriction === 'number') {// !Number.isInteger(body.minAgeRestriction)
+                if(!Number.isInteger(body.minAgeRestriction)) addErM(message.incorrectType,'minAgeRestriction')
+                if(Number.isNaN(body.minAgeRestriction)) addErM(message.incorrectType,'minAgeRestriction')
+                if(body.minAgeRestriction > 18 || body.minAgeRestriction < 0) addErM(message.invalidData,'minAgeRestriction')
             }
             else {
                 addErM(message.incorrectType,'minAgeRestriction')
