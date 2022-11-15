@@ -1,4 +1,3 @@
-import e from "express";
 import { ErrorMessage, fields } from "../models/errorMessage.model";
 import { lengthLimits } from "./lengthLimits";
 import { message } from './message'
@@ -20,7 +19,7 @@ export function getCreateError(body: K):ErrorMessage[] {
     } else {
         if(typeof body.title !== 'string' ) addErM(message.incorrectType,"title")
         else {
-            if(body.title.trim().length > 40 || body.title.trim().length < 1) {
+            if(body.title.trim().length > lengthLimits.maxTitle || body.title.trim().length < lengthLimits.minTitle) {
                 addErM(message.lengthInvalid,"title")
             }
         }
@@ -30,7 +29,7 @@ export function getCreateError(body: K):ErrorMessage[] {
     } else {
         if(typeof body.author !== 'string' ) addErM(message.incorrectType,'author')
         else {
-            if(body.author.trim().length > 20 || body.author.trim().length < 1) {
+            if(body.author.trim().length > lengthLimits.maxAuthor || body.author.trim().length < lengthLimits.minAuthor) {
                 addErM(message.lengthInvalid,"author")
             }
         }

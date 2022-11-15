@@ -5,8 +5,7 @@ import {isIsoDate} from "../helpers/isIsoDate";
 import {generateRandomString} from "../helpers/generateRandomString";
 import {message} from "../helpers/message";
 import {checkValidResolution} from "../helpers/checkValidResolution";
-import {type} from "os";
-import e from 'express';
+
 
 
 type storeVideo  = videoModels.StoreVideoModel;
@@ -90,8 +89,6 @@ class Store {
         return true
     }
 
-
-
     update(element: updateVideo,id: number) {
         this.state = this.state.map((el) => {
             if(el.id === id) {
@@ -135,16 +132,7 @@ class Store {
         if (Number.isNaN(id)) return undefined
         return this.state.find( el => el.id === id)
     }
-    //
-    // checkValidResolution(resolutions: Array<string>): boolean  {
-    //     if(!Array.isArray(resolutions)) return false
-    //     for(let i of resolutions)
-    //     //@ts-ignore
-    //         if(!this.availableResolutions.includes(i)) {
-    //             return false
-    //         }
-    //     return true
-    // }
+
 }
 
 export const store = new Store([
@@ -171,7 +159,7 @@ export const store = new Store([
           "P144"
         ]
       },{
-        "id": 35,
+        "id": 3865,
         "title": "string",
         "author": "string",
         "canBeDownloaded": true,

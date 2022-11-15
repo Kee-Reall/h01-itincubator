@@ -5,6 +5,7 @@ import { httpStatus } from "../helpers/httpStatus";
 import { ErrorMessage } from "../models/errorMessage.model";
 import { getCreateError } from "../helpers/getCreateError";
 import { ApiError} from "../helpers/ApiError";
+import { getUpdateError } from "../helpers/updateCreateError";
 
 
 class RootController {
@@ -53,7 +54,7 @@ class RootController {
             }
         }
 
-        res.status(httpStatus.badRequest).json({"ApiError":"(...updateCreateError(req.body))"})
+        res.status(httpStatus.badRequest).json(ApiError(...getUpdateError(req.body)))
 
         //res.status(httpStatus.badRequest).json("ApiError(...updateCreateError(req.body))")
 
