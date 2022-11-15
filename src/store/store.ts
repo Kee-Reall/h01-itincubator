@@ -5,6 +5,7 @@ import {isIsoDate} from "../helpers/isIsoDate";
 import {generateRandomString} from "../helpers/generateRandomString";
 import {message} from "../helpers/message";
 import {checkValidResolution} from "../helpers/checkValidResolution";
+import { addDays } from '../helpers/addDay';
 
 
 
@@ -39,12 +40,13 @@ class Store {
     }
 
     defaultObj(): any{
+        const createDate = new Date(Date.now())
         return {
             canBeDownloaded: false,
             minAgeRestriction: null,
             id: this.generateId(),
-            createdAt:new Date(Date.now()).toISOString(),
-            publicationDate: new Date(Date.now()).toISOString()
+            createdAt:createDate.toISOString(),
+            publicationDate: addDays(createDate,1).toISOString()
         }
     }
 
