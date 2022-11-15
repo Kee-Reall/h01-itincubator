@@ -1,9 +1,6 @@
 import * as videoModels from '../models/video.model';
-import {availableResolutions, StoreVideoModel} from '../models/video.model';
 import {cloneObject} from "../helpers/cloneObject";
 import {isIsoDate} from "../helpers/isIsoDate";
-import {generateRandomString} from "../helpers/generateRandomString";
-import {message} from "../helpers/message";
 import {checkValidResolution} from "../helpers/checkValidResolution";
 import { addDays } from '../helpers/addDay';
 
@@ -17,7 +14,7 @@ type storeVideos = Array<storeVideo>;
 class Store {
     state: storeVideos
     private _id: number
-    readonly availableResolutions: availableResolutions[] = ["P144","P240","P360","P480","P720","P1080","P1440","P2160"]
+    readonly availableResolutions: videoModels.availableResolutions[] = ["P144","P240","P360","P480","P720","P1080","P1440","P2160"]
     private _clear: Array<storeVideo> = []
 
     constructor( public initialState: storeVideos) {
@@ -109,7 +106,9 @@ class Store {
     }
 
     updateAllFieldsHas(body: updateVideo): boolean {
-        return body.hasOwnProperty('title') && body.hasOwnProperty('canBeDownloaded') && body.hasOwnProperty('author') && body.hasOwnProperty('minAgeRestriction') && body.hasOwnProperty('availableResolutions') && body.hasOwnProperty('publicationDate')
+        return this.createFieldsCorrect(body) && body.hasOwnProperty('canBeDownloaded')
+            && body.hasOwnProperty('minAgeRestriction') && body.hasOwnProperty('availableResolutions')
+            && body.hasOwnProperty('publicationDate')
     }
 
     updateAllFieldsCorrect(body: updateVideo): boolean {
@@ -137,50 +136,4 @@ class Store {
 
 }
 
-export const store = new Store([
-    {
-      "id": 200,
-      "title": "string",
-      "author": "string",
-      "canBeDownloaded": true,
-      "minAgeRestriction": null,
-      "createdAt": "2022-11-14T10:45:50.180Z",
-      "publicationDate": "2022-11-14T10:45:50.180Z",
-      "availableResolutions": [
-        "P144"
-      ]
-    },{
-        "id": 333,
-        "title": "string",
-        "author": "string",
-        "canBeDownloaded": true,
-        "minAgeRestriction": null,
-        "createdAt": "2022-11-14T10:45:50.180Z",
-        "publicationDate": "2022-11-14T10:45:50.180Z",
-        "availableResolutions": [
-          "P144"
-        ]
-      },{
-        "id": 3865,
-        "title": "string",
-        "author": "string",
-        "canBeDownloaded": true,
-        "minAgeRestriction": null,
-        "createdAt": "2022-11-14T10:45:50.180Z",
-        "publicationDate": "2022-11-14T10:45:50.180Z",
-        "availableResolutions": [
-          "P144"
-        ]
-      },{
-        "id": 976,
-        "title": "string",
-        "author": "string",
-        "canBeDownloaded": true,
-        "minAgeRestriction": null,
-        "createdAt": "2022-11-14T10:45:50.180Z",
-        "publicationDate": "2022-11-14T10:45:50.180Z",
-        "availableResolutions": [
-          "P144"
-        ]
-      }
-  ])
+export const store = new Store([])

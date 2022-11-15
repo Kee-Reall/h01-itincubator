@@ -2,9 +2,7 @@ import {store} from "../store/store";
 import {Request, Response} from "express";
 
 class TestingController {
-    constructor() {
-
-    }
+    constructor() {}
 
     clearAll(req: Request, res: Response){
         store.clearAll()

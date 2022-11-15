@@ -17,14 +17,14 @@ export function getUpdateError(body: UpdateVideoModel): ErrorMessage[] {
             addErM(message.incorrectType,'canBeDownloaded')
         }
     } else {
-        addErM(message.reqiredMore,'canBeDownloaded')
+        addErM(message.requiredMore,'canBeDownloaded')
     }
     if(body.hasOwnProperty('publicationDate')) {
         if(!isIsoDate(body.publicationDate)) {
             addErM(message.incorrectType,'publicationDate')
         }
     } else {
-        addErM(message.reqiredMore,'publicationDate')
+        addErM(message.requiredMore,'publicationDate')
     }
     if(body.hasOwnProperty('minAgeRestriction')) {
         if(body.minAgeRestriction !== null) {
@@ -39,7 +39,7 @@ export function getUpdateError(body: UpdateVideoModel): ErrorMessage[] {
         }
     }
     else {
-        addErM(message.reqiredMore,'minAgeRestriction')
+        addErM(message.requiredMore,'minAgeRestriction')
     }
 
     return errorsMessages

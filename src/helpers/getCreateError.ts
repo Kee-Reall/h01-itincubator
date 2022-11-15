@@ -15,7 +15,7 @@ export function getCreateError(body: K):ErrorMessage[] {
         errorsMessages.push(new ErrorMessage(message, field))
     }
     if(!body.hasOwnProperty('title')) {
-        addErM(message.reqiredMore,"title")
+        addErM(message.requiredMore,"title")
     } else {
         if(typeof body.title !== 'string' ) addErM(message.incorrectType,"title")
         else {
@@ -25,7 +25,7 @@ export function getCreateError(body: K):ErrorMessage[] {
         }
     }
     if(!body.hasOwnProperty('author')) {
-        addErM(message.reqiredMore,"author")
+        addErM(message.requiredMore,"author")
     } else {
         if(typeof body.author !== 'string' ) addErM(message.incorrectType,'author')
         else {

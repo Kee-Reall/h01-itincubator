@@ -43,22 +43,14 @@ class RootController {
             res.sendStatus(httpStatus.nofFound)
             return
         }
-        if(store.updateAllFieldsHas(req.body)){
-            console.log("all has")
+        if(store.updateAllFieldsHas(req.body)) {
             if(store.updateAllFieldsCorrect(req.body)) {
                 store.update(req.body,+req.params.id)
                 res.sendStatus(httpStatus.noContent)
                 return
-            }else{
-                console.log('not all has')
             }
         }
-
         res.status(httpStatus.badRequest).json(ApiError(...getUpdateError(req.body)))
-
-        //res.status(httpStatus.badRequest).json("ApiError(...updateCreateError(req.body))")
-
-
     }
 
 
