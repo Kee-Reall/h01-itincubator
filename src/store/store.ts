@@ -14,8 +14,8 @@ type storeVideos = Array<storeVideo>;
 class Store {
     state: storeVideos
     private _id: number
-    readonly availableResolutions: videoModels.availableResolutions[] = ["P144","P240","P360","P480","P720","P1080","P1440","P2160"]
-    private _clear: Array<storeVideo> = []
+    private readonly availableResolutions: videoModels.availableResolutions[] = ["P144","P240","P360","P480","P720","P1080","P1440","P2160"]
+    private readonly _clear: Array<storeVideo> = []
 
     constructor( public initialState: storeVideos) {
         this.state = cloneObject(this.initialState)
@@ -133,7 +133,6 @@ class Store {
         if (Number.isNaN(id)) return undefined
         return this.state.find( el => el.id === id)
     }
-
 }
 
 export const store = new Store([])
